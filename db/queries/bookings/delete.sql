@@ -1,0 +1,1 @@
+DELETE FROM бронирование WHERE id_бронь = ?; 

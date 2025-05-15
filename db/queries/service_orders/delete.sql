@@ -1,0 +1,1 @@
+DELETE FROM Заказы_услуг WHERE id_заказ = ?; 

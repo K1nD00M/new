@@ -1,0 +1,1 @@
+SELECT * FROM услуги WHERE id_услуга = ?; 

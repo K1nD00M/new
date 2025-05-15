@@ -1,0 +1,1 @@
+SELECT * FROM Номера WHERE id_номер = ?; 

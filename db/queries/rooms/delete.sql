@@ -1,0 +1,1 @@
+DELETE FROM Номера WHERE id_номер = ?; 

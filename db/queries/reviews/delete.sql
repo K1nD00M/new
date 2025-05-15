@@ -1,0 +1,1 @@
+DELETE FROM отзывы WHERE id_отзыва = ?; 
