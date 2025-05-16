@@ -1,1 +1,1 @@
-DELETE FROM услуги WHERE id_услуга = ?; 
+DELETE FROM services WHERE id = ?; 

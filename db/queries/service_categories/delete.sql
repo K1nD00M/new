@@ -1,1 +1,1 @@
-DELETE FROM Категории_Услуг WHERE id_категория = ?; 
+DELETE FROM service_categories WHERE id = ?; 

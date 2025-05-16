@@ -1,1 +1,1 @@
-SELECT * FROM Гости; 
+SELECT * FROM guests; 

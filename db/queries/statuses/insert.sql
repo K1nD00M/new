@@ -1,2 +1,2 @@
-INSERT INTO статус_брони (забронировано, оплачено, на_уборке)
+INSERT INTO booking_status (is_booked, is_paid, is_cleaning)
 VALUES (?, ?, ?); 

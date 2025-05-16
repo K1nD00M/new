@@ -29,7 +29,8 @@ function addRoom(room, callback) {
     const db = new sqlite3.Database(dbPath);
     const sql = readSQL('insert.sql');
     const params = [
-        room.номер_комнаты, room.id_тип_номера, room.цена_за_ночь, room.вместимость, room.статус, room.отзыв
+        room.room_number, room.room_type_id, room.price_per_night,
+        room.capacity, room.status, room.review
     ];
     db.run(sql, params, function(err) {
         db.close();
@@ -41,7 +42,8 @@ function updateRoom(id, room, callback) {
     const db = new sqlite3.Database(dbPath);
     const sql = readSQL('update.sql');
     const params = [
-        room.номер_комнаты, room.id_тип_номера, room.цена_за_ночь, room.вместимость, room.статус, room.отзыв, id
+        room.room_number, room.room_type_id, room.price_per_night,
+        room.capacity, room.status, room.review, id
     ];
     db.run(sql, params, function(err) {
         db.close();

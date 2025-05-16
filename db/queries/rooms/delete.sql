@@ -1,1 +1,1 @@
-DELETE FROM Номера WHERE id_номер = ?; 
+DELETE FROM rooms WHERE id = ?; 

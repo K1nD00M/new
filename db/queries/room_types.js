@@ -28,7 +28,7 @@ function getRoomTypeById(id, callback) {
 function addRoomType(roomType, callback) {
     const db = new sqlite3.Database(dbPath);
     const sql = readSQL('insert.sql');
-    const params = [roomType.название_типа, roomType.описание, roomType.базовая_цена];
+    const params = [roomType.name, roomType.description, roomType.base_price];
     db.run(sql, params, function(err) {
         db.close();
         callback(err, this ? this.lastID : null);
@@ -38,7 +38,7 @@ function addRoomType(roomType, callback) {
 function updateRoomType(id, roomType, callback) {
     const db = new sqlite3.Database(dbPath);
     const sql = readSQL('update.sql');
-    const params = [roomType.название_типа, roomType.описание, roomType.базовая_цена, id];
+    const params = [roomType.name, roomType.description, roomType.base_price, id];
     db.run(sql, params, function(err) {
         db.close();
         callback(err, this ? this.changes : null);

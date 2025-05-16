@@ -1,2 +1,2 @@
-INSERT INTO Заказы_услуг (id_бронь, id_услуга, дата_заказа, сумма, статус)
+INSERT INTO service_orders (booking_id, service_id, quantity, total_price, order_date)
 VALUES (?, ?, ?, ?, ?); 

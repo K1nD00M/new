@@ -29,8 +29,9 @@ function addBooking(booking, callback) {
     const db = new sqlite3.Database(dbPath);
     const sql = readSQL('insert.sql');
     const params = [
-        booking.id_номер, booking.id_гость, booking.дата_заезда, booking.дата_выезда,
-        booking.id_статус_брони, booking.общая_стоимость, booking.скидка, booking.колво_гостей
+        booking.room_id, booking.guest_id, booking.check_in_date,
+        booking.check_out_date, booking.status_id, booking.total_cost,
+        booking.discount, booking.guest_count
     ];
     db.run(sql, params, function(err) {
         db.close();
@@ -42,8 +43,9 @@ function updateBooking(id, booking, callback) {
     const db = new sqlite3.Database(dbPath);
     const sql = readSQL('update.sql');
     const params = [
-        booking.id_номер, booking.id_гость, booking.дата_заезда, booking.дата_выезда,
-        booking.id_статус_брони, booking.общая_стоимость, booking.скидка, booking.колво_гостей, id
+        booking.room_id, booking.guest_id, booking.check_in_date,
+        booking.check_out_date, booking.status_id, booking.total_cost,
+        booking.discount, booking.guest_count, id
     ];
     db.run(sql, params, function(err) {
         db.close();

@@ -1,1 +1,1 @@
-SELECT * FROM Гости WHERE id_гость = ?; 
+SELECT * FROM guests WHERE id = ?; 

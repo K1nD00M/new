@@ -5,6 +5,11 @@ const fs = require('fs');
 const session = require('express-session');
 const bcrypt = require('bcrypt');
 const { isAuthenticated } = require('./middleware/auth');
+const { SqliteGuiNode } = require('sqlite-gui-node');
+const sqlite3 = require('sqlite3').verbose();
+const dbPath = path.join(__dirname, 'db', 'hotel.db');
+const db = new sqlite3.Database(dbPath);
+const methodOverride = require('method-override');
 
 const guests = require('./db/queries/guests');
 const rooms = require('./db/queries/rooms');
@@ -25,6 +30,8 @@ const accessLogStream = fs.createWriteStream(path.join(__dirname, 'logs', 'acces
 app.use(morgan('combined', { stream: accessLogStream }));
 
 app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(methodOverride('_method'));
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Настройка EJS
@@ -32,10 +39,62 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
 app.use(session({
-    secret: 'your_secret_key', // замени на свой секрет
+    secret: 'your_secret_key',
     resave: false,
     saveUninitialized: false
 }));
+
+// Инициализируем SQLite GUI на порту 3001 с конфигурацией
+SqliteGuiNode(db, 3001, {
+    tableNames: {
+        'guests': {
+            primaryKey: 'id',
+            displayName: 'Guests'
+        },
+        'rooms': {
+            primaryKey: 'id',
+            displayName: 'Rooms'
+        },
+        'bookings': {
+            primaryKey: 'id',
+            displayName: 'Bookings'
+        },
+        'booking_status': {
+            primaryKey: 'id',
+            displayName: 'Booking Status'
+        },
+        'room_types': {
+            primaryKey: 'id',
+            displayName: 'Room Types'
+        },
+        'services': {
+            primaryKey: 'id',
+            displayName: 'Services'
+        },
+        'service_categories': {
+            primaryKey: 'id',
+            displayName: 'Service Categories'
+        },
+        'service_orders': {
+            primaryKey: 'id',
+            displayName: 'Service Orders'
+        },
+        'reviews': {
+            primaryKey: 'id',
+            displayName: 'Reviews'
+        },
+        'loyalty_program': {
+            primaryKey: 'id',
+            displayName: 'Loyalty Program'
+        },
+        'users': {
+            primaryKey: 'id',
+            displayName: 'Users'
+        }
+    }
+}).catch((err) => {
+    console.error('Error starting the GUI:', err);
+});
 
 function requireAuth(req, res, next) {
     if (!req.session.user) {
@@ -56,7 +115,7 @@ app.get('/guests', isAuthenticated, (req, res) => {
         const sqlite3 = require('sqlite3').verbose();
         const dbPath = require('path').join(__dirname, 'db', 'hotel.db');
         const dbConn = new sqlite3.Database(dbPath);
-        dbConn.all('SELECT * FROM Гости WHERE ФИО LIKE ?', [`%${fio}%`], (err, rows) => {
+        dbConn.all('SELECT * FROM guests WHERE full_name LIKE ?', [`%${fio}%`], (err, rows) => {
             dbConn.close();
             if (err) return res.status(500).send('Ошибка БД');
             res.render('guests/index', { guests: rows, query: fio });
@@ -170,6 +229,69 @@ app.get('/room_types/new', isAuthenticated, (req, res) => {
     res.render('room_types/new');
 });
 
+// --- Гости ---
+app.get('/guests/:id/edit', isAuthenticated, (req, res) => {
+    guests.getGuestById(req.params.id, (err, guest) => {
+        if (err) return res.status(500).send('Ошибка БД');
+        if (!guest) return res.status(404).send('Гость не найден');
+        res.render('guests/edit', { guest });
+    });
+});
+
+// --- Номера ---
+app.get('/rooms/:id/edit', isAuthenticated, (req, res) => {
+    rooms.getRoomById(req.params.id, (err, room) => {
+        if (err) return res.status(500).send('Ошибка БД');
+        if (!room) return res.status(404).send('Номер не найден');
+        res.render('rooms/edit', { room });
+    });
+});
+
+// --- Бронирования ---
+app.get('/bookings/:id/edit', isAuthenticated, (req, res) => {
+    bookings.getBookingById(req.params.id, (err, booking) => {
+        if (err) return res.status(500).send('Ошибка БД');
+        if (!booking) return res.status(404).send('Бронирование не найдено');
+        res.render('bookings/edit', { booking });
+    });
+});
+
+// --- Услуги ---
+app.get('/services/:id/edit', isAuthenticated, (req, res) => {
+    services.getServiceById(req.params.id, (err, service) => {
+        if (err) return res.status(500).send('Ошибка БД');
+        if (!service) return res.status(404).send('Услуга не найдена');
+        res.render('services/edit', { service });
+    });
+});
+
+// --- Категории услуг ---
+app.get('/service_categories/:id/edit', isAuthenticated, (req, res) => {
+    serviceCategories.getServiceCategoryById(req.params.id, (err, category) => {
+        if (err) return res.status(500).send('Ошибка БД');
+        if (!category) return res.status(404).send('Категория не найдена');
+        res.render('service_categories/edit', { category });
+    });
+});
+
+// --- Заказы услуг ---
+app.get('/service_orders/:id/edit', isAuthenticated, (req, res) => {
+    serviceOrders.getServiceOrderById(req.params.id, (err, order) => {
+        if (err) return res.status(500).send('Ошибка БД');
+        if (!order) return res.status(404).send('Заказ не найден');
+        res.render('service_orders/edit', { order });
+    });
+});
+
+// --- Типы номеров ---
+app.get('/room_types/:id/edit', isAuthenticated, (req, res) => {
+    roomTypes.getRoomTypeById(req.params.id, (err, type) => {
+        if (err) return res.status(500).send('Ошибка БД');
+        if (!type) return res.status(404).send('Тип номера не найден');
+        res.render('room_types/edit', { type });
+    });
+});
+
 // Заглушка для главной страницы
 app.get('/', (req, res) => {
     res.send('<h1>Добро пожаловать в систему управления гостиницей!</h1>');
@@ -235,6 +357,134 @@ app.post('/statuses', isAuthenticated, (req, res) => {
 app.post('/room_types', isAuthenticated, (req, res) => {
     roomTypes.addRoomType(req.body, (err) => {
         if (err) return res.status(400).send('Ошибка при добавлении типа номера. Проверьте корректность данных и связей.');
+        res.redirect('/room_types');
+    });
+});
+
+// --- Гости ---
+app.put('/guests/:id', isAuthenticated, (req, res) => {
+    guests.updateGuest(req.params.id, req.body, (err) => {
+        if (err) return res.status(500).send('Ошибка при обновлении гостя');
+        res.redirect('/guests');
+    });
+});
+
+// --- Номера ---
+app.put('/rooms/:id', isAuthenticated, (req, res) => {
+    rooms.updateRoom(req.params.id, req.body, (err) => {
+        if (err) return res.status(500).send('Ошибка при обновлении номера');
+        res.redirect('/rooms');
+    });
+});
+
+// --- Бронирования ---
+app.put('/bookings/:id', isAuthenticated, (req, res) => {
+    bookings.updateBooking(req.params.id, req.body, (err) => {
+        if (err) return res.status(500).send('Ошибка при обновлении бронирования');
+        res.redirect('/bookings');
+    });
+});
+
+// --- Услуги ---
+app.put('/services/:id', isAuthenticated, (req, res) => {
+    services.updateService(req.params.id, req.body, (err) => {
+        if (err) return res.status(500).send('Ошибка при обновлении услуги');
+        res.redirect('/services');
+    });
+});
+
+// --- Категории услуг ---
+app.put('/service_categories/:id', isAuthenticated, (req, res) => {
+    serviceCategories.updateServiceCategory(req.params.id, req.body, (err) => {
+        if (err) return res.status(500).send('Ошибка при обновлении категории услуги');
+        res.redirect('/service_categories');
+    });
+});
+
+// --- Заказы услуг ---
+app.put('/service_orders/:id', isAuthenticated, (req, res) => {
+    serviceOrders.updateServiceOrder(req.params.id, req.body, (err) => {
+        if (err) return res.status(500).send('Ошибка при обновлении заказа услуги');
+        res.redirect('/service_orders');
+    });
+});
+
+// --- Отзывы ---
+app.put('/reviews/:id', isAuthenticated, (req, res) => {
+    reviews.updateReview(req.params.id, req.body, (err) => {
+        if (err) return res.status(500).send('Ошибка при обновлении отзыва');
+        res.redirect('/reviews');
+    });
+});
+
+// --- Типы номеров ---
+app.put('/room_types/:id', isAuthenticated, (req, res) => {
+    roomTypes.updateRoomType(req.params.id, req.body, (err) => {
+        if (err) return res.status(500).send('Ошибка при обновлении типа номера');
+        res.redirect('/room_types');
+    });
+});
+
+// --- Гости ---
+app.delete('/guests/:id', isAuthenticated, (req, res) => {
+    guests.deleteGuest(req.params.id, (err) => {
+        if (err) return res.status(500).send('Ошибка при удалении гостя');
+        res.redirect('/guests');
+    });
+});
+
+// --- Номера ---
+app.delete('/rooms/:id', isAuthenticated, (req, res) => {
+    rooms.deleteRoom(req.params.id, (err) => {
+        if (err) return res.status(500).send('Ошибка при удалении номера');
+        res.redirect('/rooms');
+    });
+});
+
+// --- Бронирования ---
+app.delete('/bookings/:id', isAuthenticated, (req, res) => {
+    bookings.deleteBooking(req.params.id, (err) => {
+        if (err) return res.status(500).send('Ошибка при удалении бронирования');
+        res.redirect('/bookings');
+    });
+});
+
+// --- Услуги ---
+app.delete('/services/:id', isAuthenticated, (req, res) => {
+    services.deleteService(req.params.id, (err) => {
+        if (err) return res.status(500).send('Ошибка при удалении услуги');
+        res.redirect('/services');
+    });
+});
+
+// --- Категории услуг ---
+app.post('/service_categories/:id/delete', isAuthenticated, (req, res) => {
+    serviceCategories.deleteServiceCategory(req.params.id, (err) => {
+        if (err) return res.status(500).send('Ошибка при удалении категории услуги');
+        res.redirect('/service_categories');
+    });
+});
+
+// --- Заказы услуг ---
+app.delete('/service_orders/:id', isAuthenticated, (req, res) => {
+    serviceOrders.deleteServiceOrder(req.params.id, (err) => {
+        if (err) return res.status(500).send('Ошибка при удалении заказа услуги');
+        res.redirect('/service_orders');
+    });
+});
+
+// --- Отзывы ---
+app.delete('/reviews/:id', isAuthenticated, (req, res) => {
+    reviews.deleteReview(req.params.id, (err) => {
+        if (err) return res.status(500).send('Ошибка при удалении отзыва');
+        res.redirect('/reviews');
+    });
+});
+
+// --- Типы номеров ---
+app.delete('/room_types/:id', isAuthenticated, (req, res) => {
+    roomTypes.deleteRoomType(req.params.id, (err) => {
+        if (err) return res.status(500).send('Ошибка при удалении типа номера');
         res.redirect('/room_types');
     });
 });
@@ -314,7 +564,11 @@ app.post('/login', async (req, res) => {
             }
 
             req.session.user = user;
-            res.redirect('/');
+            
+            // Редирект на сохраненный URL или на главную
+            const returnTo = req.session.returnTo || '/';
+            delete req.session.returnTo; // Очищаем сохраненный URL
+            res.redirect(returnTo);
         });
     } catch (error) {
         console.error('Ошибка при входе:', error);

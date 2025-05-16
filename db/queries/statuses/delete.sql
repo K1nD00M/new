@@ -1,1 +1,1 @@
-DELETE FROM статус_брони WHERE id_статус_брони = ?; 
+DELETE FROM booking_status WHERE id = ?; 

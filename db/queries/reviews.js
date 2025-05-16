@@ -28,7 +28,7 @@ function getReviewById(id, callback) {
 function addReview(review, callback) {
     const db = new sqlite3.Database(dbPath);
     const sql = readSQL('insert.sql');
-    const params = [review.ФИО_гостя, review.оценка, review.комментарий, review.дата_отзыва, review.ответ, review.дата_ответа];
+    const params = [review.guest_name, review.rating, review.comment, review.review_date, review.response, review.response_date];
     db.run(sql, params, function(err) {
         db.close();
         callback(err, this ? this.lastID : null);
@@ -38,7 +38,7 @@ function addReview(review, callback) {
 function updateReview(id, review, callback) {
     const db = new sqlite3.Database(dbPath);
     const sql = readSQL('update.sql');
-    const params = [review.ФИО_гостя, review.оценка, review.комментарий, review.дата_отзыва, review.ответ, review.дата_ответа, id];
+    const params = [review.guest_name, review.rating, review.comment, review.review_date, review.response, review.response_date, id];
     db.run(sql, params, function(err) {
         db.close();
         callback(err, this ? this.changes : null);

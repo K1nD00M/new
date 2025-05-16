@@ -28,7 +28,11 @@ function getStatusById(id, callback) {
 function addStatus(status, callback) {
     const db = new sqlite3.Database(dbPath);
     const sql = readSQL('insert.sql');
-    const params = [status.забронировано, status.оплачено, status.на_уборке];
+    const params = [
+        status.is_booked ? 'true' : 'false',
+        status.is_paid ? 'true' : 'false',
+        status.is_cleaning ? 'true' : 'false'
+    ];
     db.run(sql, params, function(err) {
         db.close();
         callback(err, this ? this.lastID : null);
@@ -38,7 +42,12 @@ function addStatus(status, callback) {
 function updateStatus(id, status, callback) {
     const db = new sqlite3.Database(dbPath);
     const sql = readSQL('update.sql');
-    const params = [status.забронировано, status.оплачено, status.на_уборке, id];
+    const params = [
+        status.is_booked ? 'true' : 'false',
+        status.is_paid ? 'true' : 'false',
+        status.is_cleaning ? 'true' : 'false',
+        id
+    ];
     db.run(sql, params, function(err) {
         db.close();
         callback(err, this ? this.changes : null);

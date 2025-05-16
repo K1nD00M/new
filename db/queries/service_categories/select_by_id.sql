@@ -1,1 +1,1 @@
-SELECT * FROM Категории_Услуг WHERE id_категория = ?; 
+SELECT * FROM service_categories WHERE id = ?; 

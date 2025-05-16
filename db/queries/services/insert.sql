@@ -1,2 +1,2 @@
-INSERT INTO услуги (название, описание, цена, id_категория)
+INSERT INTO services (name, description, price, category_id)
 VALUES (?, ?, ?, ?); 

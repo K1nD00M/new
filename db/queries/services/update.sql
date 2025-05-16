@@ -1,2 +1,3 @@
-UPDATE услуги SET название=?, описание=?, цена=?, id_категория=?
-WHERE id_услуга=?; 
+UPDATE services 
+SET name = ?, description = ?, price = ?, category_id = ?
+WHERE id = ?; 

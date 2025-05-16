@@ -1,2 +1,4 @@
-UPDATE Номера SET номер_комнаты=?, id_тип_номера=?, цена_за_ночь=?, вместимость=?, статус=?, отзыв=?
-WHERE id_номер=?; 
+UPDATE rooms 
+SET room_number = ?, room_type_id = ?, price_per_night = ?, 
+    capacity = ?, status = ?, review = ?
+WHERE id = ?; 

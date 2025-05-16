@@ -17,15 +17,22 @@
                 <th>Название типа</th>
                 <th>Описание</th>
                 <th>Базовая цена</th>
+                <th>Действия</th>
             </tr>
         </thead>
         <tbody>
             <% roomTypes.forEach(type => { %>
                 <tr>
-                    <td><%= type.id_тип_номера %></td>
-                    <td><%= type.название_типа %></td>
-                    <td><%= type.описание %></td>
-                    <td><%= type.базовая_цена %></td>
+                    <td><%= type.id %></td>
+                    <td><%= type.name %></td>
+                    <td><%= type.description %></td>
+                    <td><%= type.base_price %></td>
+                    <td>
+                        <a href="/room_types/<%= type.id %>/edit" class="btn btn-sm btn-primary">Редактировать</a>
+                        <form action="/room_types/<%= type.id %>?_method=DELETE" method="POST" style="display: inline;">
+                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Вы уверены?')">Удалить</button>
+                        </form>
+                    </td>
                 </tr>
             <% }) %>
         </tbody>

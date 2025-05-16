@@ -1,1 +1,1 @@
-SELECT * FROM Категории_Услуг; 
+SELECT * FROM service_categories; 

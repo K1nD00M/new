@@ -1,2 +1,3 @@
-UPDATE Заказы_услуг SET id_бронь=?, id_услуга=?, дата_заказа=?, сумма=?, статус=?
-WHERE id_заказ=?; 
+UPDATE service_orders 
+SET booking_id = ?, service_id = ?, quantity = ?, total_price = ?, order_date = ?
+WHERE id = ?; 

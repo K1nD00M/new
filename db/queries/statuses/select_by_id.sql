@@ -1,1 +1,1 @@
-SELECT * FROM статус_брони WHERE id_статус_брони = ?; 
+SELECT * FROM booking_status WHERE id = ?; 

@@ -16,14 +16,21 @@
                 <th>ID</th>
                 <th>Название</th>
                 <th>Описание</th>
+                <th>Действия</th>
             </tr>
         </thead>
         <tbody>
             <% serviceCategories.forEach(category => { %>
                 <tr>
-                    <td><%= category.id_категория %></td>
-                    <td><%= category.название %></td>
-                    <td><%= category.описание %></td>
+                    <td><%= category.id %></td>
+                    <td><%= category.name %></td>
+                    <td><%= category.description %></td>
+                    <td>
+                        <a href="/service_categories/<%= category.id %>/edit" class="btn btn-sm btn-primary">Редактировать</a>
+                        <form action="/service_categories/<%= category.id %>/delete" method="POST" style="display: inline;">
+                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Вы уверены?')">Удалить</button>
+                        </form>
+                    </td>
                 </tr>
             <% }) %>
         </tbody>

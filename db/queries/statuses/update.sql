@@ -1,2 +1,2 @@
-UPDATE статус_брони SET забронировано=?, оплачено=?, на_уборке=?
-WHERE id_статус_брони=?; 
+UPDATE booking_status SET is_booked=?, is_paid=?, is_cleaning=?
+WHERE id=?; 

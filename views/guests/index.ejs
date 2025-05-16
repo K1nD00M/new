@@ -30,20 +30,27 @@
                 <th>Дата въезда</th>
                 <th>Статус</th>
                 <th>Баллы</th>
+                <th>Действия</th>
             </tr>
         </thead>
         <tbody>
             <% guests.forEach(guest => { %>
                 <tr>
-                    <td><%= guest.id_гость %></td>
-                    <td><%= guest.ФИО %></td>
-                    <td><%= guest.телефон %></td>
-                    <td><%= guest.почта %></td>
-                    <td><%= guest.паспорт %></td>
-                    <td><%= guest.дата_регистрации %></td>
-                    <td><%= guest.дата_въезда %></td>
-                    <td><%= guest.статус_гостя %></td>
-                    <td><%= guest.баллы %></td>
+                    <td><%= guest.id %></td>
+                    <td><%= guest.full_name %></td>
+                    <td><%= guest.phone %></td>
+                    <td><%= guest.email %></td>
+                    <td><%= guest.passport %></td>
+                    <td><%= guest.registration_date %></td>
+                    <td><%= guest.check_in_date %></td>
+                    <td><%= guest.status %></td>
+                    <td><%= guest.points %></td>
+                    <td>
+                        <a href="/guests/<%= guest.id %>/edit" class="btn btn-sm btn-primary">Редактировать</a>
+                        <form action="/guests/<%= guest.id %>?_method=DELETE" method="POST" style="display: inline;">
+                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Вы уверены?')">Удалить</button>
+                        </form>
+                    </td>
                 </tr>
             <% }) %>
         </tbody>

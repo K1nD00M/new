@@ -1,2 +1,2 @@
-INSERT INTO бронирование (id_номер, id_гость, дата_заезда, дата_выезда, id_статус_брони, общая_стоимость, скидка, колво_гостей)
+INSERT INTO bookings (room_id, guest_id, check_in_date, check_out_date, status_id, total_cost, discount, guest_count)
 VALUES (?, ?, ?, ?, ?, ?, ?, ?); 

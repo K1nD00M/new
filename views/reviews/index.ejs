@@ -20,18 +20,32 @@
                 <th>Дата отзыва</th>
                 <th>Ответ</th>
                 <th>Дата ответа</th>
+                <th>Действия</th>
             </tr>
         </thead>
         <tbody>
             <% reviews.forEach(review => { %>
                 <tr>
-                    <td><%= review.id_отзыва %></td>
-                    <td><%= review.ФИО_гостя %></td>
-                    <td><%= review.оценка %></td>
-                    <td><%= review.комментарий %></td>
-                    <td><%= review.дата_отзыва %></td>
-                    <td><%= review.ответ %></td>
-                    <td><%= review.дата_ответа %></td>
+                    <td><%= review.id %></td>
+                    <td><%= review.guest_name %></td>
+                    <td>
+                        <% for(let i = 0; i < review.rating; i++) { %>
+                            <span class="text-warning">★</span>
+                        <% } %>
+                        <% for(let i = review.rating; i < 5; i++) { %>
+                            <span class="text-muted">☆</span>
+                        <% } %>
+                    </td>
+                    <td><%= review.comment %></td>
+                    <td><%= review.review_date %></td>
+                    <td><%= review.response %></td>
+                    <td><%= review.response_date %></td>
+                    <td>
+                        <a href="/reviews/<%= review.id %>/edit" class="btn btn-sm btn-primary">Редактировать</a>
+                        <form action="/reviews/<%= review.id %>?_method=DELETE" method="POST" style="display: inline;">
+                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Вы уверены?')">Удалить</button>
+                        </form>
+                    </td>
                 </tr>
             <% }) %>
         </tbody>

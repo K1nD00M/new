@@ -29,8 +29,8 @@ function addGuest(guest, callback) {
     const db = new sqlite3.Database(dbPath);
     const sql = readSQL('insert.sql');
     const params = [
-        guest.ФИО, guest.телефон, guest.почта, guest.паспорт,
-        guest.дата_регистрации, guest.дата_въезда, guest.статус_гостя, guest.баллы
+        guest.full_name, guest.phone, guest.email, guest.passport,
+        guest.registration_date, guest.check_in_date, guest.guest_status, guest.loyalty_points
     ];
     db.run(sql, params, function(err) {
         db.close();
@@ -42,8 +42,8 @@ function updateGuest(id, guest, callback) {
     const db = new sqlite3.Database(dbPath);
     const sql = readSQL('update.sql');
     const params = [
-        guest.ФИО, guest.телефон, guest.почта, guest.паспорт,
-        guest.дата_регистрации, guest.дата_въезда, guest.статус_гостя, guest.баллы, id
+        guest.full_name, guest.phone, guest.email, guest.passport,
+        guest.registration_date, guest.check_in_date, guest.guest_status, guest.loyalty_points, id
     ];
     db.run(sql, params, function(err) {
         db.close();

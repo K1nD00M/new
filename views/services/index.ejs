@@ -18,16 +18,23 @@
                 <th>Описание</th>
                 <th>Цена</th>
                 <th>Категория</th>
+                <th>Действия</th>
             </tr>
         </thead>
         <tbody>
             <% services.forEach(service => { %>
                 <tr>
-                    <td><%= service.id_услуга %></td>
-                    <td><%= service.название %></td>
-                    <td><%= service.описание %></td>
-                    <td><%= service.цена %></td>
-                    <td><%= service.id_категория %></td>
+                    <td><%= service.id %></td>
+                    <td><%= service.name %></td>
+                    <td><%= service.description %></td>
+                    <td><%= service.price %></td>
+                    <td><%= service.category_id %></td>
+                    <td>
+                        <a href="/services/<%= service.id %>/edit" class="btn btn-sm btn-primary">Редактировать</a>
+                        <form action="/services/<%= service.id %>?_method=DELETE" method="POST" style="display: inline;">
+                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Вы уверены?')">Удалить</button>
+                        </form>
+                    </td>
                 </tr>
             <% }) %>
         </tbody>

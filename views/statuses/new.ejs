@@ -9,17 +9,17 @@
 <div class="container mt-4">
     <h1>Добавить статус брони</h1>
     <form action="/statuses" method="POST">
-        <div class="mb-3">
-            <label class="form-label">Забронировано</label>
-            <input type="text" name="забронировано" class="form-control">
+        <div class="mb-3 form-check">
+            <input type="checkbox" name="is_booked" class="form-check-input" id="is_booked">
+            <label class="form-check-label" for="is_booked">Забронировано</label>
         </div>
-        <div class="mb-3">
-            <label class="form-label">Оплачено</label>
-            <input type="text" name="оплачено" class="form-control">
+        <div class="mb-3 form-check">
+            <input type="checkbox" name="is_paid" class="form-check-input" id="is_paid">
+            <label class="form-check-label" for="is_paid">Оплачено</label>
         </div>
-        <div class="mb-3">
-            <label class="form-label">На уборке</label>
-            <input type="text" name="на_уборке" class="form-control">
+        <div class="mb-3 form-check">
+            <input type="checkbox" name="is_cleaning" class="form-check-input" id="is_cleaning">
+            <label class="form-check-label" for="is_cleaning">На уборке</label>
         </div>
         <button type="submit" class="btn btn-primary">Добавить</button>
         <a href="/statuses" class="btn btn-secondary">Назад</a>

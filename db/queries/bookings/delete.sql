@@ -1,1 +1,1 @@
-DELETE FROM бронирование WHERE id_бронь = ?; 
+DELETE FROM bookings WHERE id = ?; 

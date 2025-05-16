@@ -1,2 +1,2 @@
-INSERT INTO Категории_Услуг (название, описание)
+INSERT INTO service_categories (name, description)
 VALUES (?, ?); 

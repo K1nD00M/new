@@ -28,7 +28,9 @@ function getServiceById(id, callback) {
 function addService(service, callback) {
     const db = new sqlite3.Database(dbPath);
     const sql = readSQL('insert.sql');
-    const params = [service.название, service.описание, service.цена, service.id_категория];
+    const params = [
+        service.name, service.description, service.price, service.category_id
+    ];
     db.run(sql, params, function(err) {
         db.close();
         callback(err, this ? this.lastID : null);
@@ -38,7 +40,9 @@ function addService(service, callback) {
 function updateService(id, service, callback) {
     const db = new sqlite3.Database(dbPath);
     const sql = readSQL('update.sql');
-    const params = [service.название, service.описание, service.цена, service.id_категория, id];
+    const params = [
+        service.name, service.description, service.price, service.category_id, id
+    ];
     db.run(sql, params, function(err) {
         db.close();
         callback(err, this ? this.changes : null);

@@ -1,1 +1,1 @@
-SELECT * FROM статус_брони; 
+SELECT * FROM booking_status; 

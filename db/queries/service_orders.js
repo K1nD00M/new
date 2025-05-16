@@ -28,7 +28,13 @@ function getServiceOrderById(id, callback) {
 function addServiceOrder(order, callback) {
     const db = new sqlite3.Database(dbPath);
     const sql = readSQL('insert.sql');
-    const params = [order.id_бронь, order.id_услуга, order.дата_заказа, order.сумма, order.статус];
+    const params = [
+        order.booking_id,
+        order.service_id,
+        order.quantity,
+        order.total_price,
+        order.order_date
+    ];
     db.run(sql, params, function(err) {
         db.close();
         callback(err, this ? this.lastID : null);
@@ -38,7 +44,14 @@ function addServiceOrder(order, callback) {
 function updateServiceOrder(id, order, callback) {
     const db = new sqlite3.Database(dbPath);
     const sql = readSQL('update.sql');
-    const params = [order.id_бронь, order.id_услуга, order.дата_заказа, order.сумма, order.статус, id];
+    const params = [
+        order.booking_id,
+        order.service_id,
+        order.quantity,
+        order.total_price,
+        order.order_date,
+        id
+    ];
     db.run(sql, params, function(err) {
         db.close();
         callback(err, this ? this.changes : null);

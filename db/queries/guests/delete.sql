@@ -1,1 +1,1 @@
-DELETE FROM Гости WHERE id_гость = ?; 
+DELETE FROM guests WHERE id = ?; 

@@ -1,1 +1,1 @@
-DELETE FROM Заказы_услуг WHERE id_заказ = ?; 
+DELETE FROM service_orders WHERE id = ?; 
