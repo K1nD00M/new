@@ -158,6 +158,70 @@ app.get('/', (req, res) => {
     res.send('<h1>Добро пожаловать в систему управления гостиницей!</h1>');
 });
 
+// --- Гости ---
+app.post('/guests', (req, res) => {
+    guests.addGuest(req.body, (err) => {
+        if (err) return res.status(400).send('Ошибка при добавлении гостя. Проверьте корректность данных и связей.');
+        res.redirect('/guests');
+    });
+});
+// --- Номера ---
+app.post('/rooms', (req, res) => {
+    rooms.addRoom(req.body, (err) => {
+        if (err) return res.status(400).send('Ошибка при добавлении номера. Проверьте корректность данных и связей.');
+        res.redirect('/rooms');
+    });
+});
+// --- Бронирования ---
+app.post('/bookings', (req, res) => {
+    bookings.addBooking(req.body, (err) => {
+        if (err) return res.status(400).send('Ошибка при добавлении бронирования. Проверьте корректность данных и связей.');
+        res.redirect('/bookings');
+    });
+});
+// --- Услуги ---
+app.post('/services', (req, res) => {
+    services.addService(req.body, (err) => {
+        if (err) return res.status(400).send('Ошибка при добавлении услуги. Проверьте корректность данных и связей.');
+        res.redirect('/services');
+    });
+});
+// --- Категории услуг ---
+app.post('/service_categories', (req, res) => {
+    serviceCategories.addServiceCategory(req.body, (err) => {
+        if (err) return res.status(400).send('Ошибка при добавлении категории услуги. Проверьте корректность данных и связей.');
+        res.redirect('/service_categories');
+    });
+});
+// --- Заказы услуг ---
+app.post('/service_orders', (req, res) => {
+    serviceOrders.addServiceOrder(req.body, (err) => {
+        if (err) return res.status(400).send('Ошибка при добавлении заказа услуги. Проверьте корректность данных и связей.');
+        res.redirect('/service_orders');
+    });
+});
+// --- Отзывы ---
+app.post('/reviews', (req, res) => {
+    reviews.addReview(req.body, (err) => {
+        if (err) return res.status(400).send('Ошибка при добавлении отзыва. Проверьте корректность данных и связей.');
+        res.redirect('/reviews');
+    });
+});
+// --- Статусы брони ---
+app.post('/statuses', (req, res) => {
+    statuses.addStatus(req.body, (err) => {
+        if (err) return res.status(400).send('Ошибка при добавлении статуса брони. Проверьте корректность данных и связей.');
+        res.redirect('/statuses');
+    });
+});
+// --- Типы номеров ---
+app.post('/room_types', (req, res) => {
+    roomTypes.addRoomType(req.body, (err) => {
+        if (err) return res.status(400).send('Ошибка при добавлении типа номера. Проверьте корректность данных и связей.');
+        res.redirect('/room_types');
+    });
+});
+
 app.listen(3000, () => {
     const PORT = process.env.PORT || 3000;
     console.log(`Server started on http://localhost:${PORT}`);
