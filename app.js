@@ -2,6 +2,8 @@ const express = require('express');
 const path = require('path');
 const morgan = require('morgan');
 const fs = require('fs');
+const session = require('express-session');
+const bcrypt = require('bcrypt');
 
 const guests = require('./db/queries/guests');
 const rooms = require('./db/queries/rooms');
@@ -12,6 +14,7 @@ const serviceOrders = require('./db/queries/service_orders');
 const reviews = require('./db/queries/reviews');
 const statuses = require('./db/queries/statuses');
 const roomTypes = require('./db/queries/room_types');
+const users = require('./db/queries/users');
 
 const app = express();
 
@@ -26,6 +29,19 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Настройка EJS
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
+
+app.use(session({
+    secret: 'your_secret_key', // замени на свой секрет
+    resave: false,
+    saveUninitialized: false
+}));
+
+function requireAuth(req, res, next) {
+    if (!req.session.user) {
+        return res.redirect('/login');
+    }
+    next();
+}
 
 // Главная страница
 app.get('/', (req, res) => {
@@ -219,6 +235,39 @@ app.post('/room_types', (req, res) => {
     roomTypes.addRoomType(req.body, (err) => {
         if (err) return res.status(400).send('Ошибка при добавлении типа номера. Проверьте корректность данных и связей.');
         res.redirect('/room_types');
+    });
+});
+
+// Регистрация
+app.get('/register', (req, res) => {
+    res.render('register');
+});
+app.post('/register', async (req, res) => {
+    const { username, password } = req.body;
+    const hash = await bcrypt.hash(password, 10);
+    users.addUser(username, hash, (err) => {
+        if (err) return res.status(400).send('Пользователь уже существует');
+        res.redirect('/login');
+    });
+});
+// Вход
+app.get('/login', (req, res) => {
+    res.render('login');
+});
+app.post('/login', (req, res) => {
+    const { username, password } = req.body;
+    users.findUserByUsername(username, async (err, user) => {
+        if (err || !user) return res.status(400).send('Неверный логин или пароль');
+        const match = await bcrypt.compare(password, user.password_hash);
+        if (!match) return res.status(400).send('Неверный логин или пароль');
+        req.session.user = { id: user.id, username: user.username };
+        res.redirect('/');
+    });
+});
+// Выход
+app.get('/logout', (req, res) => {
+    req.session.destroy(() => {
+        res.redirect('/login');
     });
 });
 
