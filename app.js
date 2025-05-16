@@ -4,6 +4,7 @@ const morgan = require('morgan');
 const fs = require('fs');
 const session = require('express-session');
 const bcrypt = require('bcrypt');
+const { isAuthenticated } = require('./middleware/auth');
 
 const guests = require('./db/queries/guests');
 const rooms = require('./db/queries/rooms');
@@ -44,12 +45,12 @@ function requireAuth(req, res, next) {
 }
 
 // Главная страница
-app.get('/', (req, res) => {
-    res.render('index');
+app.get('/', isAuthenticated, (req, res) => {
+    res.render('index', { user: req.session.user });
 });
 
 // Гости
-app.get('/guests', (req, res) => {
+app.get('/guests', isAuthenticated, (req, res) => {
     const fio = req.query.fio;
     if (fio) {
         const sqlite3 = require('sqlite3').verbose();
@@ -69,7 +70,7 @@ app.get('/guests', (req, res) => {
 });
 
 // Номера
-app.get('/rooms', (req, res) => {
+app.get('/rooms', isAuthenticated, (req, res) => {
     rooms.getAllRooms((err, roomsList) => {
         if (err) return res.status(500).send('Ошибка БД');
         res.render('rooms/index', { rooms: roomsList });
@@ -77,7 +78,7 @@ app.get('/rooms', (req, res) => {
 });
 
 // Бронирования
-app.get('/bookings', (req, res) => {
+app.get('/bookings', isAuthenticated, (req, res) => {
     bookings.getAllBookings((err, bookingsList) => {
         if (err) return res.status(500).send('Ошибка БД');
         res.render('bookings/index', { bookings: bookingsList });
@@ -85,7 +86,7 @@ app.get('/bookings', (req, res) => {
 });
 
 // Услуги
-app.get('/services', (req, res) => {
+app.get('/services', isAuthenticated, (req, res) => {
     services.getAllServices((err, servicesList) => {
         if (err) return res.status(500).send('Ошибка БД');
         res.render('services/index', { services: servicesList });
@@ -93,7 +94,7 @@ app.get('/services', (req, res) => {
 });
 
 // Категории услуг
-app.get('/service_categories', (req, res) => {
+app.get('/service_categories', isAuthenticated, (req, res) => {
     serviceCategories.getAllServiceCategories((err, categoriesList) => {
         if (err) return res.status(500).send('Ошибка БД');
         res.render('service_categories/index', { serviceCategories: categoriesList });
@@ -101,7 +102,7 @@ app.get('/service_categories', (req, res) => {
 });
 
 // Заказы услуг
-app.get('/service_orders', (req, res) => {
+app.get('/service_orders', isAuthenticated, (req, res) => {
     serviceOrders.getAllServiceOrders((err, ordersList) => {
         if (err) return res.status(500).send('Ошибка БД');
         res.render('service_orders/index', { serviceOrders: ordersList });
@@ -109,7 +110,7 @@ app.get('/service_orders', (req, res) => {
 });
 
 // Отзывы
-app.get('/reviews', (req, res) => {
+app.get('/reviews', isAuthenticated, (req, res) => {
     reviews.getAllReviews((err, reviewsList) => {
         if (err) return res.status(500).send('Ошибка БД');
         res.render('reviews/index', { reviews: reviewsList });
@@ -117,7 +118,7 @@ app.get('/reviews', (req, res) => {
 });
 
 // Статусы брони
-app.get('/statuses', (req, res) => {
+app.get('/statuses', isAuthenticated, (req, res) => {
     statuses.getAllStatuses((err, statusesList) => {
         if (err) return res.status(500).send('Ошибка БД');
         res.render('statuses/index', { statuses: statusesList });
@@ -125,7 +126,7 @@ app.get('/statuses', (req, res) => {
 });
 
 // Типы номеров
-app.get('/room_types', (req, res) => {
+app.get('/room_types', isAuthenticated, (req, res) => {
     roomTypes.getAllRoomTypes((err, roomTypesList) => {
         if (err) return res.status(500).send('Ошибка БД');
         res.render('room_types/index', { roomTypes: roomTypesList });
@@ -133,39 +134,39 @@ app.get('/room_types', (req, res) => {
 });
 
 // --- Гости ---
-app.get('/guests/new', (req, res) => {
+app.get('/guests/new', isAuthenticated, (req, res) => {
     res.render('guests/new');
 });
 // --- Номера ---
-app.get('/rooms/new', (req, res) => {
+app.get('/rooms/new', isAuthenticated, (req, res) => {
     res.render('rooms/new');
 });
 // --- Бронирования ---
-app.get('/bookings/new', (req, res) => {
+app.get('/bookings/new', isAuthenticated, (req, res) => {
     res.render('bookings/new');
 });
 // --- Услуги ---
-app.get('/services/new', (req, res) => {
+app.get('/services/new', isAuthenticated, (req, res) => {
     res.render('services/new');
 });
 // --- Категории услуг ---
-app.get('/service_categories/new', (req, res) => {
+app.get('/service_categories/new', isAuthenticated, (req, res) => {
     res.render('service_categories/new');
 });
 // --- Заказы услуг ---
-app.get('/service_orders/new', (req, res) => {
+app.get('/service_orders/new', isAuthenticated, (req, res) => {
     res.render('service_orders/new');
 });
 // --- Отзывы ---
-app.get('/reviews/new', (req, res) => {
+app.get('/reviews/new', isAuthenticated, (req, res) => {
     res.render('reviews/new');
 });
 // --- Статусы брони ---
-app.get('/statuses/new', (req, res) => {
+app.get('/statuses/new', isAuthenticated, (req, res) => {
     res.render('statuses/new');
 });
 // --- Типы номеров ---
-app.get('/room_types/new', (req, res) => {
+app.get('/room_types/new', isAuthenticated, (req, res) => {
     res.render('room_types/new');
 });
 
@@ -175,63 +176,63 @@ app.get('/', (req, res) => {
 });
 
 // --- Гости ---
-app.post('/guests', (req, res) => {
+app.post('/guests', isAuthenticated, (req, res) => {
     guests.addGuest(req.body, (err) => {
         if (err) return res.status(400).send('Ошибка при добавлении гостя. Проверьте корректность данных и связей.');
         res.redirect('/guests');
     });
 });
 // --- Номера ---
-app.post('/rooms', (req, res) => {
+app.post('/rooms', isAuthenticated, (req, res) => {
     rooms.addRoom(req.body, (err) => {
         if (err) return res.status(400).send('Ошибка при добавлении номера. Проверьте корректность данных и связей.');
         res.redirect('/rooms');
     });
 });
 // --- Бронирования ---
-app.post('/bookings', (req, res) => {
+app.post('/bookings', isAuthenticated, (req, res) => {
     bookings.addBooking(req.body, (err) => {
         if (err) return res.status(400).send('Ошибка при добавлении бронирования. Проверьте корректность данных и связей.');
         res.redirect('/bookings');
     });
 });
 // --- Услуги ---
-app.post('/services', (req, res) => {
+app.post('/services', isAuthenticated, (req, res) => {
     services.addService(req.body, (err) => {
         if (err) return res.status(400).send('Ошибка при добавлении услуги. Проверьте корректность данных и связей.');
         res.redirect('/services');
     });
 });
 // --- Категории услуг ---
-app.post('/service_categories', (req, res) => {
+app.post('/service_categories', isAuthenticated, (req, res) => {
     serviceCategories.addServiceCategory(req.body, (err) => {
         if (err) return res.status(400).send('Ошибка при добавлении категории услуги. Проверьте корректность данных и связей.');
         res.redirect('/service_categories');
     });
 });
 // --- Заказы услуг ---
-app.post('/service_orders', (req, res) => {
+app.post('/service_orders', isAuthenticated, (req, res) => {
     serviceOrders.addServiceOrder(req.body, (err) => {
         if (err) return res.status(400).send('Ошибка при добавлении заказа услуги. Проверьте корректность данных и связей.');
         res.redirect('/service_orders');
     });
 });
 // --- Отзывы ---
-app.post('/reviews', (req, res) => {
+app.post('/reviews', isAuthenticated, (req, res) => {
     reviews.addReview(req.body, (err) => {
         if (err) return res.status(400).send('Ошибка при добавлении отзыва. Проверьте корректность данных и связей.');
         res.redirect('/reviews');
     });
 });
 // --- Статусы брони ---
-app.post('/statuses', (req, res) => {
+app.post('/statuses', isAuthenticated, (req, res) => {
     statuses.addStatus(req.body, (err) => {
         if (err) return res.status(400).send('Ошибка при добавлении статуса брони. Проверьте корректность данных и связей.');
         res.redirect('/statuses');
     });
 });
 // --- Типы номеров ---
-app.post('/room_types', (req, res) => {
+app.post('/room_types', isAuthenticated, (req, res) => {
     roomTypes.addRoomType(req.body, (err) => {
         if (err) return res.status(400).send('Ошибка при добавлении типа номера. Проверьте корректность данных и связей.');
         res.redirect('/room_types');
@@ -242,31 +243,93 @@ app.post('/room_types', (req, res) => {
 app.get('/register', (req, res) => {
     res.render('register');
 });
+
 app.post('/register', async (req, res) => {
-    const { username, password } = req.body;
-    const hash = await bcrypt.hash(password, 10);
-    users.addUser(username, hash, (err) => {
-        if (err) return res.status(400).send('Пользователь уже существует');
-        res.redirect('/login');
-    });
+    try {
+        const { username, password } = req.body;
+        
+        // Проверяем, что все поля заполнены
+        if (!username || !password) {
+            return res.status(400).render('register', { 
+                error: 'Все поля должны быть заполнены' 
+            });
+        }
+
+        // Хешируем пароль
+        const hash = await bcrypt.hash(password, 10);
+        
+        // Добавляем пользователя
+        users.addUser(username, hash, (err) => {
+            if (err) {
+                console.error('Ошибка при регистрации:', err);
+                return res.status(400).render('register', { 
+                    error: 'Пользователь уже существует или произошла ошибка' 
+                });
+            }
+            res.redirect('/login');
+        });
+    } catch (error) {
+        console.error('Ошибка при регистрации:', error);
+        res.status(500).render('register', { 
+            error: 'Произошла ошибка при регистрации' 
+        });
+    }
 });
+
 // Вход
 app.get('/login', (req, res) => {
     res.render('login');
 });
-app.post('/login', (req, res) => {
-    const { username, password } = req.body;
-    users.findUserByUsername(username, async (err, user) => {
-        if (err || !user) return res.status(400).send('Неверный логин или пароль');
-        const match = await bcrypt.compare(password, user.password_hash);
-        if (!match) return res.status(400).send('Неверный логин или пароль');
-        req.session.user = { id: user.id, username: user.username };
-        res.redirect('/');
-    });
+
+app.post('/login', async (req, res) => {
+    try {
+        const { username, password } = req.body;
+        
+        // Проверяем, что все поля заполнены
+        if (!username || !password) {
+            return res.status(400).render('login', { 
+                error: 'Все поля должны быть заполнены' 
+            });
+        }
+
+        users.getUserByUsername(username, async (err, user) => {
+            if (err) {
+                console.error('Ошибка при входе:', err);
+                return res.status(500).render('login', { 
+                    error: 'Произошла ошибка при входе' 
+                });
+            }
+            
+            if (!user) {
+                return res.status(400).render('login', { 
+                    error: 'Неверные учетные данные' 
+                });
+            }
+
+            const match = await bcrypt.compare(password, user.password_hash);
+            if (!match) {
+                return res.status(400).render('login', { 
+                    error: 'Неверные учетные данные' 
+                });
+            }
+
+            req.session.user = user;
+            res.redirect('/');
+        });
+    } catch (error) {
+        console.error('Ошибка при входе:', error);
+        res.status(500).render('login', { 
+            error: 'Произошла ошибка при входе' 
+        });
+    }
 });
+
 // Выход
 app.get('/logout', (req, res) => {
-    req.session.destroy(() => {
+    req.session.destroy((err) => {
+        if (err) {
+            console.error('Ошибка при выходе:', err);
+        }
         res.redirect('/login');
     });
 });

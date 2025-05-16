@@ -2,7 +2,7 @@ const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
 const dbPath = path.join(__dirname, '..', 'hotel.db');
 
-function findUserByUsername(username, callback) {
+function getUserByUsername(username, callback) {
     const db = new sqlite3.Database(dbPath);
     db.get('SELECT * FROM users WHERE username = ?', [username], (err, row) => {
         db.close();
@@ -10,12 +10,12 @@ function findUserByUsername(username, callback) {
     });
 }
 
-function addUser(username, password_hash, callback) {
+function addUser(username, password, callback) {
     const db = new sqlite3.Database(dbPath);
-    db.run('INSERT INTO users (username, password_hash) VALUES (?, ?)', [username, password_hash], function(err) {
+    db.run('INSERT INTO users (username, password_hash) VALUES (?, ?)', [username, password], function(err) {
         db.close();
         callback(err, this ? this.lastID : null);
     });
 }
 
-module.exports = { findUserByUsername, addUser }; 
+module.exports = { getUserByUsername, addUser }; 
